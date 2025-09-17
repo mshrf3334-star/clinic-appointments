@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h3>لوحة التحكم</h3>
+  <form method="get" style="display:flex;gap:8px;flex-wrap:wrap">
+    <input class="input" name="q" placeholder="ابحث باسم المريض" value="{{ request.args.get('q','') }}">
+    <input class="input" type="date" name="date" value="{{ request.args.get('date','') }}">
+    <select class="input" name="doctor_id">
+      <option value="">كل الأطباء</option>
+      {% for d in doctors %}
+        <option value="{{ d.id }}" {% if request.args.get('doctor_id')|int==d.id %}selected{% endif %}>{{ d.name }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn">تصفية</button>
+    <a class="btn" href="{{ url_for('admin_seed') }}">تهيئة بيانات افتراضية</a>
+  </form>
+</div>
+
+<div class="card">
+  <table class="table">
+    <tr><th>#</th><th>الطبيب</th><th>المريض</th><th>من</th><th>إلى</th><th>الحالة</th><th>إجراءات</th></tr>
+    {% for a in appts %}
+      <tr>
+        <td>{{ a.id }}</td>
+        <td>{{ a.doctor.name }}</td>
+        <td>{{ a.patient.full_name if a.patient else '-' }}</td>
+        <td>{{ a.start_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ a.end_at.strftime('%H:%M') }}</td>
+        <td>{{ a.status }}</td>
+        <td>
+          {% if a.status == 'booked' %}
+            <a class="btn" href="{{ url_for('cancel_appt', appt_id=a.id) }}">إلغاء</a>
+          {% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7">لا توجد مواعيد</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
