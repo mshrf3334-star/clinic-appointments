@@ -1,7 +1,4 @@
-flask
-flask_sqlalchemy
-flask_login
-werkzeug
-apscheduler
-twilio
+Flask==2.2.5
 gunicorn
+requests
+SQLAlchemy
