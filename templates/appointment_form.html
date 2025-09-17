@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h3>حجز موعد</h3>
+  <form method="post">
+    <div><label>الاسم الكامل</label><br><input class="input" name="full_name" required></div>
+    <div style="margin-top:8px;"><label>الجوال (مثال: +9665xxxxxxx)</label><br><input class="input" name="phone" required></div>
+
+    <div style="margin-top:8px;"><label>الطبيب</label><br>
+      <select class="input" name="doctor_id" required>
+        {% for d in doctors %}
+          <option value="{{ d.id }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div style="margin-top:8px;"><label>التاريخ</label><br><input class="input" type="date" name="date" required></div>
+    <div style="margin-top:8px;"><label>الوقت</label><br><input class="input" type="time" name="time" required></div>
+    <div style="margin-top:8px;"><label>المدة (دقائق)</label><br><input class="input" type="number" name="duration" value="30" min="5"></div>
+
+    <div style="margin-top:12px;"><button class="btn">تأكيد الحجز</button></div>
+  </form>
+</div>
+{% endblock %}
