@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h3>دخول الأدمن</h3>
+  <form method="post">
+    <div><label>اسم المستخدم</label><br><input class="input" name="username" required></div>
+    <div style="margin-top:8px;"><label>كلمة المرور</label><br><input class="input" type="password" name="password" required></div>
+    <div style="margin-top:12px;"><button class="btn">دخول</button></div>
+  </form>
+</div>
+{% endblock %}
