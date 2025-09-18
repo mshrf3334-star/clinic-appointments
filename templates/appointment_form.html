@@ -1,37 +1,54 @@
 {% extends "base.html" %}
-{% block title %}حجز موعد{% endblock %}
+{% block title %}حجز موعد | مواعيد العيادة{% endblock %}
+
 {% block content %}
-<h2>حجز موعد</h2>
-<form method="post">
-  <div>
-    <label>الاسم الكامل</label><br>
-    <input name="full_name" required>
+<div class="card">
+  <div class="card-body p-4 p-md-5">
+    <h1 class="h3 mb-4 fw-bold">حجز موعد</h1>
+
+    <form method="post" action="{{ url_for('book') }}" novalidate>
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label required">الاسم الكامل</label>
+          <input type="text" name="name" class="form-control" placeholder="مثال: أحمد محمد" required>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label required">رقم الجوال</label>
+          <input type="tel" name="phone" class="form-control" inputmode="numeric"
+                 placeholder="9665XXXXXXXX+" required>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label required">الطبيب</label>
+          <select name="doctor_id" class="form-select" required>
+            <option value="" selected disabled>اختر الطبيب</option>
+            {% for d in doctors %}
+              <option value="{{ d.id }}">{{ d.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label required">التاريخ</label>
+          <input type="date" name="date" class="form-control" required>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label required">الوقت</label>
+          <input type="time" name="time" class="form-control" required>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">المدة (دقائق)</label>
+          <input type="number" name="duration" class="form-control" min="10" step="5" value="30">
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">حجز</button>
+        </div>
+      </div>
+    </form>
   </div>
-  <div>
-    <label>رقم الجوال (مثال: +9665xxxxxxx)</label><br>
-    <input name="phone" required>
-  </div>
-  <div>
-    <label>الطبيب</label><br>
-    <select name="doctor_id" required>
-      {% for d in doctors %}
-        <option value="{{ d.id }}">{{ d.name }} - {{ d.clinic.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div>
-    <label>التاريخ</label><br>
-    <input type="date" name="date" required>
-  </div>
-  <div>
-    <label>الوقت</label><br>
-    <input type="time" name="time" required>
-  </div>
-  <div>
-    <label>المدة (دقائق)</label><br>
-    <input type="number" name="duration" value="30" min="10" max="180">
-  </div>
-  <br>
-  <button type="submit">حجز</button>
-</form>
+</div>
 {% endblock %}
