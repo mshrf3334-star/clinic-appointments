@@ -2,53 +2,66 @@
 {% block title %}حجز موعد | مواعيد العيادة{% endblock %}
 
 {% block content %}
-<div class="card">
-  <div class="card-body p-4 p-md-5">
-    <h1 class="h3 mb-4 fw-bold">حجز موعد</h1>
+<div class="d-flex justify-content-center">
+  <div class="card w-100" style="max-width: 560px;">
+    <div class="card-body p-4 p-md-5">
+      <h1 class="h3 mb-4 fw-bold text-center">حجز موعد</h1>
 
-    <form method="post" action="{{ url_for('book') }}" novalidate>
-      <div class="row g-3">
-        <div class="col-12">
-          <label class="form-label required">الاسم الكامل</label>
-          <input type="text" name="name" class="form-control" placeholder="مثال: أحمد محمد" required>
-        </div>
+      <form method="post" action="{{ url_for('book') }}" novalidate>
+        <div class="row g-3">
 
-        <div class="col-12 col-md-6">
-          <label class="form-label required">رقم الجوال</label>
-          <input type="tel" name="phone" class="form-control" inputmode="numeric"
-                 placeholder="9665XXXXXXXX+" required>
-        </div>
+          <div class="col-12">
+            <label class="form-label required">الاسم الكامل</label>
+            <input type="text" name="name" class="form-control" placeholder="مثال: أحمد محمد" required>
+          </div>
 
-        <div class="col-12 col-md-6">
-          <label class="form-label required">الطبيب</label>
-          <select name="doctor_id" class="form-select" required>
-            <option value="" selected disabled>اختر الطبيب</option>
-            {% for d in doctors %}
-              <option value="{{ d.id }}">{{ d.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <div class="col-12">
+            <label class="form-label required">رقم الجوال</label>
+            <div class="input-group">
+              <span class="input-group-text">+966</span>
+              <input type="tel" name="phone" class="form-control" inputmode="numeric"
+                     pattern="5[0-9]{8}" title="أدخل 9 أرقام تبدأ بـ 5 (مثال: 512345678)" placeholder="5XXXXXXXX" required>
+            </div>
+            <small class="text-muted">مثال: 512345678 (سيُضاف +966 تلقائيًا)</small>
+          </div>
 
-        <div class="col-12 col-md-6">
-          <label class="form-label required">التاريخ</label>
-          <input type="date" name="date" class="form-control" required>
-        </div>
+          <div class="col-12">
+            <label class="form-label required">الطبيب</label>
+            <select name="doctor_id" class="form-select" required>
+              <option value="" selected disabled>اختر الطبيب</option>
+              {% for d in doctors %}
+                <option value="{{ d.id }}">{{ d.name }}</option>
+              {% endfor %}
+            </select>
+            {% if not doctors or doctors|length == 0 %}
+              <div class="alert alert-warning mt-2 mb-0">
+                لا يوجد أطباء بعد — تمّت إضافة عينات تلقائيًا. حدّث الصفحة إن لم تظهر.
+              </div>
+            {% endif %}
+          </div>
 
-        <div class="col-12 col-md-6">
-          <label class="form-label required">الوقت</label>
-          <input type="time" name="time" class="form-control" required>
-        </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label required">التاريخ</label>
+            <input type="date" name="date" class="form-control" required>
+          </div>
 
-        <div class="col-12 col-md-6">
-          <label class="form-label">المدة (دقائق)</label>
-          <input type="number" name="duration" class="form-control" min="10" step="5" value="30">
-        </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label required">الوقت</label>
+            <input type="time" name="time" class="form-control" required>
+          </div>
 
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">حجز</button>
+          <div class="col-12 col-md-6">
+            <label class="form-label">المدة (دقائق)</label>
+            <input type="number" name="duration" class="form-control" min="10" step="5" value="30">
+          </div>
+
+          <div class="col-12 pt-2">
+            <button type="submit" class="btn btn-primary w-100">حجز</button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+
+    </div>
   </div>
 </div>
 {% endblock %}
