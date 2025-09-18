@@ -1,45 +1,38 @@
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
+# ... أعلى الملف: عندك models Doctor, Appointment مفترض موجودة
+from sqlalchemy.exc import OperationalError
 
-app = Flask(__name__)
-
-# إعداد قاعدة البيانات (SQLite)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///clinic.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-# نموذج لجدول العيادة (Clinic)
-class Clinic(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-
-# الصفحة الرئيسية
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-# صفحة تسجيل الدخول
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-# صفحة المواعيد
-@app.route('/appointments')
-def appointments():
-    return render_template('appointment_form.html')
-
-# صفحة لوحة الإدارة
-@app.route('/admin')
-def admin_dashboard():
-    return render_template('admin_dashboard.html')
-
-# 📌 Route جديد لحجز المواعيد (book) حتى يختفي الخطأ
-@app.route('/book')
+@app.route('/book', methods=['GET', 'POST'])
 def book():
-    return render_template('appointment_form.html')
+    # تأكد من وجود أطباء، ولو ما فيه أضف عينات
+    try:
+        doctors = Doctor.query.order_by(Doctor.name).all()
+    except OperationalError:
+        # لو لسه الجداول ما اننشأت
+        db.create_all()
+        doctors = []
 
-# تشغيل التطبيق
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # إنشاء الجداول لو ما كانت موجودة
-    app.run(host='0.0.0.0', port=10000)
+    if not doctors:
+        seed = ['د. محمد العتيبي', 'د. سارة القحطاني', 'د. علي الأحمد']
+        for name in seed:
+            db.session.add(Doctor(name=name))
+        db.session.commit()
+        doctors = Doctor.query.order_by(Doctor.name).all()
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        phone = request.form.get('phone', '').strip()
+        doctor_id = request.form.get('doctor_id')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        duration = int(request.form.get('duration') or 30)
+
+        if not (name and phone and doctor_id and date and time):
+            flash('من فضلك املأ كل الحقول المطلوبة', 'danger')
+            return render_template('appointment_form.html', doctors=doctors)
+
+        # احفظ الموعد (ركّب من date+time إلى datetime حسب موديلك)
+        # ... منطق الحفظ هنا ...
+        flash('تم حجز الموعد بنجاح', 'success')
+        return redirect(url_for('appointments'))
+
+    return render_template('appointment_form.html', doctors=doctors)
