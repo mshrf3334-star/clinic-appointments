@@ -1,41 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card">
-  <h2>لوحة الإدارة</h2>
-  {% if appointments and appointments|length > 0 %}
-    <div style="overflow-x:auto;">
-      <table border="1" cellspacing="0" cellpadding="8" style="width:100%; background:#fff;">
-        <thead style="background:#f1f1f1;">
-          <tr>
-            <th>#</th>
-            <th>الاسم</th>
-            <th>الجوال</th>
-            <th>الطبيب</th>
-            <th>التاريخ</th>
-            <th>من الساعة</th>
-            <th>المدة (د)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in appointments %}
-          <tr>
-            <td>{{ a.id }}</td>
-            <td>{{ a.fullname }}</td>
-            <td>{{ a.phone }}</td>
-            <td>{{ a.doctor }}</td>
-            <td>{{ a.date }}</td>
-            <td>{{ a.time }}</td>
-            <td>{{ a.duration }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  {% else %}
-    <p>لا توجد مواعيد بعد.</p>
-  {% endif %}
-  <p style="margin-top:12px;">
-    <a href="{{ url_for('book') }}">+ إضافة موعد جديد</a>
-  </p>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h3 class="mb-4">📋 لوحة الإدارة</h3>
+    {% if appointments %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>#</th>
+              <th>الاسم</th>
+              <th>الجوال</th>
+              <th>الطبيب</th>
+              <th>التاريخ</th>
+              <th>الوقت</th>
+              <th>المدة</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in appointments %}
+            <tr>
+              <td>{{ a.id }}</td>
+              <td>{{ a.fullname }}</td>
+              <td>{{ a.phone }}</td>
+              <td>{{ a.doctor }}</td>
+              <td>{{ a.date }}</td>
+              <td>{{ a.time }}</td>
+              <td>{{ a.duration }} د</td>
+              <td>
+                <a href="#" class="btn btn-sm btn-danger">❌ حذف</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted">لا توجد مواعيد بعد.</p>
+    {% endif %}
+    <a href="{{ url_for('book') }}" class="btn btn-success mt-3">+ إضافة موعد جديد</a>
+  </div>
 </div>
 {% endblock %}
