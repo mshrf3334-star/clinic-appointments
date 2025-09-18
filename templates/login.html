@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 {% block title %}تسجيل الدخول{% endblock %}
 {% block content %}
-<h2>تسجيل الدخول للإدارة</h2>
-<form method="post">
-  <div>
-    <label>اسم المستخدم</label><br>
-    <input name="username" required>
+<div class="card">
+  <div class="card-body p-4 p-md-5">
+    <h1 class="h4 mb-4 fw-bold">تسجيل الدخول</h1>
+    <form method="post" action="{{ url_for('login') }}">
+      <div class="mb-3">
+        <label class="form-label required">اسم المستخدم</label>
+        <input class="form-control" name="username" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label required">كلمة المرور</label>
+        <input type="password" class="form-control" name="password" required>
+      </div>
+      <button class="btn btn-primary">دخول</button>
+    </form>
   </div>
-  <div>
-    <label>كلمة المرور</label><br>
-    <input type="password" name="password" required>
-  </div>
-  <br>
-  <button type="submit">دخول</button>
-</form>
+</div>
 {% endblock %}
