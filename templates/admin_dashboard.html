@@ -1,46 +1,41 @@
 {% extends "base.html" %}
-{% block title %}لوحة الإدارة{% endblock %}
 {% block content %}
-<h2>لوحة الإدارة</h2>
-
-<form method="get" style="margin-bottom:10px">
-  <input name="q" placeholder="ابحث بالاسم" value="{{ request.args.get('q','') }}">
-  <select name="doctor_id">
-    <option value="">كل الأطباء</option>
-    {% for d in doctors %}
-      <option value="{{ d.id }}" {% if request.args.get('doctor_id')|int == d.id %}selected{% endif %}>
-        {{ d.name }}
-      </option>
-    {% endfor %}
-  </select>
-  <input type="date" name="date" value="{{ request.args.get('date','') }}">
-  <button type="submit">تصفية</button>
-</form>
-
-<table border="1" cellpadding="6" cellspacing="0" width="100%">
-  <tr>
-    <th>#</th><th>الطبيب</th><th>المراجع</th><th>من</th><th>إلى</th><th>الحالة</th><th>إجراء</th>
-  </tr>
-  {% for a in appts %}
-  <tr>
-    <td>{{ a.id }}</td>
-    <td>{{ a.doctor.name }}</td>
-    <td>{{ a.patient.full_name }}</td>
-    <td>{{ a.start_at.strftime('%Y-%m-%d %H:%M') }}</td>
-    <td>{{ a.end_at.strftime('%H:%M') }}</td>
-    <td>{{ a.status }}</td>
-    <td>
-      {% if a.status == 'booked' %}
-        <a href="{{ url_for('cancel_appt', appt_id=a.id) }}">إلغاء</a>
-      {% else %}
-        —
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
-
-<p style="margin-top:10px">
-  <a href="{{ url_for('admin_seed') }}">تهيئة بيانات تجريبية (أطباء/أقسام)</a>
-</p>
+<div class="card">
+  <h2>لوحة الإدارة</h2>
+  {% if appointments and appointments|length > 0 %}
+    <div style="overflow-x:auto;">
+      <table border="1" cellspacing="0" cellpadding="8" style="width:100%; background:#fff;">
+        <thead style="background:#f1f1f1;">
+          <tr>
+            <th>#</th>
+            <th>الاسم</th>
+            <th>الجوال</th>
+            <th>الطبيب</th>
+            <th>التاريخ</th>
+            <th>من الساعة</th>
+            <th>المدة (د)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.fullname }}</td>
+            <td>{{ a.phone }}</td>
+            <td>{{ a.doctor }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.duration }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>لا توجد مواعيد بعد.</p>
+  {% endif %}
+  <p style="margin-top:12px;">
+    <a href="{{ url_for('book') }}">+ إضافة موعد جديد</a>
+  </p>
+</div>
 {% endblock %}
