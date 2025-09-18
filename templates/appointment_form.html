@@ -1,29 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>حجز موعد</h2>
-<form method="POST">
-  <label>الاسم الكامل</label>
-  <input type="text" name="name" required>
-
-  <label>رقم الجوال</label>
-  <input type="text" name="phone" placeholder="9665xxxxxxx" required>
-
-  <label>الطبيب</label>
-  <select name="doctor" required>
-    <option value="">اختر الطبيب</option>
-    <option value="د. أحمد">د. أحمد</option>
-    <option value="د. سارة">د. سارة</option>
-  </select>
-
-  <label>التاريخ</label>
-  <input type="date" name="date" required>
-
-  <label>الوقت</label>
-  <input type="time" name="time" required>
-
-  <label>المدة (دقائق)</label>
-  <input type="number" name="duration" value="30">
-
-  <button type="submit">حجز</button>
-</form>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h3 class="mb-4">🗓️ حجز موعد</h3>
+    <form method="POST" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">الاسم الكامل</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">رقم الجوال</label>
+        <input type="text" name="phone" class="form-control" placeholder="05xxxxxxxx" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">الطبيب</label>
+        <select name="doctor" class="form-select" required>
+          <option value="">اختر الطبيب</option>
+          <option value="د. أحمد">د. أحمد</option>
+          <option value="د. سارة">د. سارة</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">التاريخ</label>
+        <input type="date" name="date" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">الوقت</label>
+        <input type="time" name="time" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">المدة (دقائق)</label>
+        <input type="number" name="duration" class="form-control" value="30">
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary w-100">حجز</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
