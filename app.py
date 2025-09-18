@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "supersecretkey"
 
-# قاعدة البيانات SQLite
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(BASE_DIR, "clinic.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
@@ -27,10 +27,24 @@ class Appointment(db.Model):
     time = db.Column(db.String(20), nullable=False)    # HH:MM
     duration = db.Column(db.Integer, nullable=False)   # دقائق
 
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+
+    def set_password(self, raw): self.password_hash = generate_password_hash(raw)
+    def check_password(self, raw): return check_password_hash(self.password_hash, raw)
+
 with app.app_context():
     db.create_all()
+    # إنشاء أدمن افتراضي (مرة واحدة)
+    if not Admin.query.filter_by(username="admin").first():
+        u = Admin(username="admin")
+        u.set_password("1234")  # غيّرها بعد أول دخول
+        db.session.add(u)
+        db.session.commit()
 
-# ====== الصفحات ======
+# ====== صفحات عامة ======
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -60,20 +74,51 @@ def book():
 
     return render_template("appointment_form.html")
 
+# ====== تسجيل الدخول / الخروج ======
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # تجريبي
     if request.method == "POST":
-        flash("تم تسجيل الدخول (تجريبي).", "info")
-        return redirect(url_for("admin_dashboard"))
+        username = request.form.get("username","").strip()
+        password = request.form.get("password","")
+        user = Admin.query.filter_by(username=username).first()
+        if user and user.check_password(password):
+            session["admin_username"] = user.username
+            flash("تم تسجيل الدخول ✅", "success")
+            return redirect(url_for("admin_dashboard"))
+        flash("بيانات الدخول غير صحيحة", "danger")
     return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("admin_username", None)
+    flash("تم تسجيل الخروج", "info")
+    return redirect(url_for("index"))
+
+# ====== لوحة الإدارة (محمية) ======
+def require_admin():
+    if not session.get("admin_username"):
+        flash("يلزم تسجيل الدخول أولاً", "warning")
+        return False
+    return True
 
 @app.route("/admin")
 @app.route("/admin_dashboard")
 def admin_dashboard():
-    # عرض المواعيد الأحدث أولاً
+    if not require_admin():
+        return redirect(url_for("login"))
     appts = Appointment.query.order_by(Appointment.id.desc()).all()
     return render_template("admin_dashboard.html", appointments=appts)
+
+# حذف موعد (اختياري)
+@app.route("/admin/appointments/<int:appt_id>/delete", methods=["POST"])
+def delete_appointment(appt_id):
+    if not require_admin():
+        return redirect(url_for("login"))
+    a = Appointment.query.get_or_404(appt_id)
+    db.session.delete(a)
+    db.session.commit()
+    flash("تم حذف الموعد", "success")
+    return redirect(url_for("admin_dashboard"))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
