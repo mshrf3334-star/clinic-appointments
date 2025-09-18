@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-
-{% block title %}الرئيسية{% endblock %}
-
+{% block title %}الرئيسية - نظام المواعيد{% endblock %}
 {% block content %}
-    <div class="card shadow p-4">
-        <h2 class="mb-3">الصفحة الرئيسية</h2>
-        <p>مرحباً بالزائر في نظام المواعيد.</p>
-    </div>
+<h2>الصفحة الرئيسية</h2>
+<p>مرحبًا بك في نظام المواعيد.</p>
+<p><a href="{{ url_for('book') }}">احجز موعدًا الآن</a></p>
 {% endblock %}
