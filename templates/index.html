@@ -1,25 +1,6 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="card">
-  <h3>حجز سريع</h3>
-  <p>ابدأ من صفحة <a href="{{ url_for('book') }}">حجز موعد</a> لاختيار الطبيب والوقت.</p>
-</div>
+{% extends 'base.html' %}
 
-<div class="card">
-  <h3>أقرب 10 مواعيد</h3>
-  <table class="table">
-    <tr><th>الطبيب</th><th>المريض</th><th>من</th><th>إلى</th><th>الحالة</th></tr>
-    {% for a in appts %}
-      <tr>
-        <td>{{ a.doctor.name }}</td>
-        <td>{{ a.patient.full_name if a.patient else '-' }}</td>
-        <td>{{ a.start_at.strftime('%Y-%m-%d %H:%M') }}</td>
-        <td>{{ a.end_at.strftime('%H:%M') }}</td>
-        <td>{{ a.status }}</td>
-      </tr>
-    {% else %}
-      <tr><td colspan="5">لا توجد مواعيد حالياً</td></tr>
-    {% endfor %}
-  </table>
-</div>
+{% block content %}
+<h2>الصفحة الرئيسية</h2>
+<p>مرحباً بالزائر في نظام المواعيد.</p>
 {% endblock %}
