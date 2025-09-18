@@ -1,36 +1,28 @@
-<div class="row g-3">
-  <!-- ... بقية الحقول (الاسم، الجوال، الطبيب، التاريخ) ... -->
+{% extends "base.html" %}
 
-  <div class="col-12 col-md-6">
-    <label class="form-label required">من (الوقت)</label>
-    <input type="time" name="start_time" id="start_time" class="form-control" required>
-  </div>
-
-  <div class="col-12 col-md-6">
-    <label class="form-label required">إلى (الوقت)</label>
-    <input type="time" name="end_time" id="end_time" class="form-control" required>
-  </div>
-
-  <div class="col-12 col-md-6">
-    <label class="form-label">المدة (دقائق)</label>
-    <input type="number" name="duration" id="duration" class="form-control" min="5" step="5" value="30" readonly>
-    <small class="text-muted">تُحسب تلقائيًا من (من → إلى)</small>
-  </div>
-
-  <div class="col-12 pt-2">
-    <button type="submit" class="btn btn-primary w-100">حجز</button>
-  </div>
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">لوحة الإدارة</h2>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h5>إدارة المواعيد</h5>
+                <a href="{{ url_for('appointments') }}" class="btn btn-primary btn-sm">عرض المواعيد</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h5>إضافة طبيب</h5>
+                <a href="#" class="btn btn-success btn-sm">إضافة</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h5>إدارة المستخدمين</h5>
+                <a href="#" class="btn btn-warning btn-sm">إدارة</a>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script>
-  function toMinutes(t){ if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; }
-  function recalc(){
-    const s = toMinutes(document.getElementById('start_time').value);
-    const e = toMinutes(document.getElementById('end_time').value);
-    const dur = document.getElementById('duration');
-    if(s!=null && e!=null && e>s){ dur.value = e - s; dur.classList.remove('is-invalid'); }
-    else { dur.value = ''; if(s!=null && e!=null) dur.classList.add('is-invalid'); }
-  }
-  document.getElementById('start_time').addEventListener('input', recalc);
-  document.getElementById('end_time').addEventListener('input', recalc);
-</script>
+{% endblock %}
