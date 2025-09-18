@@ -1,20 +1,17 @@
 {% extends "base.html" %}
-
 {% block title %}تسجيل الدخول{% endblock %}
-
 {% block content %}
-    <div class="card shadow p-4" style="max-width:400px; margin:auto;">
-        <h3 class="mb-3">تسجيل الدخول</h3>
-        <form method="POST" action="/login">
-            <div class="mb-3">
-                <label class="form-label">اسم المستخدم</label>
-                <input type="text" name="username" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">كلمة المرور</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">دخول</button>
-        </form>
-    </div>
+<h2>تسجيل الدخول للإدارة</h2>
+<form method="post">
+  <div>
+    <label>اسم المستخدم</label><br>
+    <input name="username" required>
+  </div>
+  <div>
+    <label>كلمة المرور</label><br>
+    <input type="password" name="password" required>
+  </div>
+  <br>
+  <button type="submit">دخول</button>
+</form>
 {% endblock %}
