@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% block title %}الرئيسية - نظام المواعيد{% endblock %}
 {% block content %}
-<h2>الصفحة الرئيسية</h2>
-<p>مرحبًا بك في نظام المواعيد.</p>
-<p><a href="{{ url_for('book') }}">احجز موعدًا الآن</a></p>
+<div class="card shadow-sm">
+  <div class="card-body text-center">
+    <h2 class="mb-3">مرحباً بك في نظام مواعيد العيادة</h2>
+    <p class="text-muted">من هنا يمكنك حجز المواعيد وإدارتها بسهولة.</p>
+    <a href="{{ url_for('book') }}" class="btn btn-success">+ احجز موعد الآن</a>
+  </div>
+</div>
 {% endblock %}
