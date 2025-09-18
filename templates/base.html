@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>العيادة</title>
+    <title>{% block title %}نظام مواعيد العيادة{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <header>
-        <h1>نظام مواعيد العيادة</h1>
-        <!-- بدل current_user نعرض ترحيب عادي -->
-        <p>مرحباً بك في الموقع</p>
-        <nav>
-            <a href="/">الرئيسية</a> |
-            <a href="/appointments">المواعيد</a> |
-            <a href="/login">تسجيل الدخول</a>
-        </nav>
-        <hr>
-    </header>
+<body class="bg-light">
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">🏥 نظام العيادة</a>
+            <div>
+                <a class="btn btn-light btn-sm" href="/">الرئيسية</a>
+                <a class="btn btn-light btn-sm" href="/appointments">المواعيد</a>
+                <a class="btn btn-light btn-sm" href="/login">تسجيل الدخول</a>
+            </div>
+        </div>
+    </nav>
 
-    <!-- هنا هيتغير المحتوى -->
-    {% block content %}{% endblock %}
+    <!-- المحتوى -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
