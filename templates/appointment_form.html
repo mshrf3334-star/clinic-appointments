@@ -1,67 +1,36 @@
-{% extends "base.html" %}
-{% block title %}حجز موعد | مواعيد العيادة{% endblock %}
+<div class="row g-3">
+  <!-- ... بقية الحقول (الاسم، الجوال، الطبيب، التاريخ) ... -->
 
-{% block content %}
-<div class="d-flex justify-content-center">
-  <div class="card w-100" style="max-width: 560px;">
-    <div class="card-body p-4 p-md-5">
-      <h1 class="h3 mb-4 fw-bold text-center">حجز موعد</h1>
+  <div class="col-12 col-md-6">
+    <label class="form-label required">من (الوقت)</label>
+    <input type="time" name="start_time" id="start_time" class="form-control" required>
+  </div>
 
-      <form method="post" action="{{ url_for('book') }}" novalidate>
-        <div class="row g-3">
+  <div class="col-12 col-md-6">
+    <label class="form-label required">إلى (الوقت)</label>
+    <input type="time" name="end_time" id="end_time" class="form-control" required>
+  </div>
 
-          <div class="col-12">
-            <label class="form-label required">الاسم الكامل</label>
-            <input type="text" name="name" class="form-control" placeholder="مثال: أحمد محمد" required>
-          </div>
+  <div class="col-12 col-md-6">
+    <label class="form-label">المدة (دقائق)</label>
+    <input type="number" name="duration" id="duration" class="form-control" min="5" step="5" value="30" readonly>
+    <small class="text-muted">تُحسب تلقائيًا من (من → إلى)</small>
+  </div>
 
-          <div class="col-12">
-            <label class="form-label required">رقم الجوال</label>
-            <div class="input-group">
-              <span class="input-group-text">+966</span>
-              <input type="tel" name="phone" class="form-control" inputmode="numeric"
-                     pattern="5[0-9]{8}" title="أدخل 9 أرقام تبدأ بـ 5 (مثال: 512345678)" placeholder="5XXXXXXXX" required>
-            </div>
-            <small class="text-muted">مثال: 512345678 (سيُضاف +966 تلقائيًا)</small>
-          </div>
-
-          <div class="col-12">
-            <label class="form-label required">الطبيب</label>
-            <select name="doctor_id" class="form-select" required>
-              <option value="" selected disabled>اختر الطبيب</option>
-              {% for d in doctors %}
-                <option value="{{ d.id }}">{{ d.name }}</option>
-              {% endfor %}
-            </select>
-            {% if not doctors or doctors|length == 0 %}
-              <div class="alert alert-warning mt-2 mb-0">
-                لا يوجد أطباء بعد — تمّت إضافة عينات تلقائيًا. حدّث الصفحة إن لم تظهر.
-              </div>
-            {% endif %}
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label required">التاريخ</label>
-            <input type="date" name="date" class="form-control" required>
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label required">الوقت</label>
-            <input type="time" name="time" class="form-control" required>
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label">المدة (دقائق)</label>
-            <input type="number" name="duration" class="form-control" min="10" step="5" value="30">
-          </div>
-
-          <div class="col-12 pt-2">
-            <button type="submit" class="btn btn-primary w-100">حجز</button>
-          </div>
-        </div>
-      </form>
-
-    </div>
+  <div class="col-12 pt-2">
+    <button type="submit" class="btn btn-primary w-100">حجز</button>
   </div>
 </div>
-{% endblock %}
+
+<script>
+  function toMinutes(t){ if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; }
+  function recalc(){
+    const s = toMinutes(document.getElementById('start_time').value);
+    const e = toMinutes(document.getElementById('end_time').value);
+    const dur = document.getElementById('duration');
+    if(s!=null && e!=null && e>s){ dur.value = e - s; dur.classList.remove('is-invalid'); }
+    else { dur.value = ''; if(s!=null && e!=null) dur.classList.add('is-invalid'); }
+  }
+  document.getElementById('start_time').addEventListener('input', recalc);
+  document.getElementById('end_time').addEventListener('input', recalc);
+</script>
