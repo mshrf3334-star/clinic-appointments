@@ -1,22 +1,25 @@
 {% extends "base.html" %}
+{% block title %}تسجيل الدخول{% endblock %}
 {% block content %}
-<div class="card shadow-sm">
+<div class="card shadow-sm" style="max-width:500px; margin:auto">
   <div class="card-body">
-    <h3 class="mb-4">🔑 تسجيل الدخول</h3>
+    <h3 class="mb-4 text-center">🔑 تسجيل الدخول</h3>
+
     <form method="POST" class="row g-3">
       <div class="col-12">
         <label class="form-label">اسم المستخدم</label>
         <input type="text" name="username" class="form-control" required>
       </div>
+
       <div class="col-12">
         <label class="form-label">كلمة المرور</label>
         <input type="password" name="password" class="form-control" required>
       </div>
+
       <div class="col-12">
-        <button class="btn btn-success w-100">دخول</button>
+        <button class="btn btn-primary w-100">دخول</button>
       </div>
     </form>
-    <p class="text-muted mt-3">الافتراضي: admin / 1234 — غيّرها بعد الدخول.</p>
   </div>
 </div>
 {% endblock %}
