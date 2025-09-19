@@ -1,64 +1,69 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card shadow p-4">
-    <h2 class="mb-4 text-center">حجز موعد</h2>
+<div class="page-wrap">
+  <div class="card shadow-lg p-4 card-form mx-auto bg-white">
+    <h3 class="text-center mb-4">📅 حجز موعد</h3>
+
     <form method="POST" action="{{ url_for('book') }}">
-        <div class="mb-3">
-            <label class="form-label">الاسم الكامل</label>
-            <input type="text" name="name" class="form-control" placeholder="اكتب اسمك الكامل" required>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">الاسم الكامل</label>
+        <input type="text" name="name" class="form-control" placeholder="اكتب اسمك الكامل" required>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">رقم الجوال</label>
-            <input type="tel" name="phone" class="form-control" placeholder="مثال: 9665xxxxxxxx" required>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">رقم الجوال</label>
+        <input type="tel" name="phone" class="form-control" placeholder="مثال: 9665xxxxxxxx" required>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">العيادة</label>
-            <select name="clinic" class="form-select" required>
-                <option value="">اختر العيادة</option>
-                <option value="الأسنان">الأسنان</option>
-                <option value="الباطنية">الباطنية</option>
-                <option value="المسالك البولية">المسالك البولية</option>
-                <option value="العظام">العظام</option>
-                <option value="الأطفال">الأطفال</option>
-                <option value="النساء والولادة">النساء والولادة</option>
-            </select>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">العيادة</label>
+        <select name="clinic" class="form-select" required>
+          <option value="">اختر العيادة</option>
+          <option>الأسنان</option>
+          <option>الباطنية</option>
+          <option>المسالك البولية</option>
+          <option>العظام</option>
+          <option>الأطفال</option>
+          <option>النساء والولادة</option>
+        </select>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">الطبيب</label>
-            <select name="doctor" class="form-select" required>
-                <option value="">اختر الطبيب</option>
-                <option value="د. أحمد">د. أحمد</option>
-                <option value="د. سارة">د. سارة</option>
-                <option value="د. محمد">د. محمد</option>
-                <option value="د. ليلى">د. ليلى</option>
-                <option value="د. خالد">د. خالد</option>
-            </select>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">الطبيب</label>
+        <select name="doctor" class="form-select" required>
+          <option value="">اختر الطبيب</option>
+          <option>د. أحمد</option>
+          <option>د. سارة</option>
+          <option>د. محمد</option>
+          <option>د. ليلى</option>
+          <option>د. خالد</option>
+        </select>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">التاريخ</label>
-            <input type="date" name="date" class="form-control" required>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">التاريخ</label>
+          <input type="date" name="date" class="form-control" required>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">من الساعة</label>
-            <input type="time" name="start_time" class="form-control" required>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">المدة (دقائق)</label>
+          <input type="number" name="duration" class="form-control" value="30" min="10" step="5" required>
         </div>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">إلى الساعة</label>
-            <input type="time" name="end_time" class="form-control" required>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">من الساعة</label>
+          <input type="time" name="start_time" class="form-control" required>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">المدة (دقائق)</label>
-            <input type="number" name="duration" class="form-control" value="30" min="10" step="5" required>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">إلى الساعة</label>
+          <input type="time" name="end_time" class="form-control" required>
         </div>
+      </div>
 
-        <button type="submit" class="btn btn-primary w-100">حجز</button>
+      <button type="submit" class="btn btn-primary w-100">حجز</button>
     </form>
+  </div>
 </div>
 {% endblock %}
