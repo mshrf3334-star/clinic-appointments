@@ -1,25 +1,33 @@
 {% extends "base.html" %}
-{% block title %}تسجيل الدخول{% endblock %}
+
 {% block content %}
-<div class="card shadow-sm" style="max-width:500px; margin:auto">
-  <div class="card-body">
-    <h3 class="mb-4 text-center">🔑 تسجيل الدخول</h3>
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header text-center bg-primary text-white">
+            <h4>🔑 تسجيل الدخول</h4>
+        </div>
+        <div class="card-body">
+            {% if error %}
+            <div class="alert alert-danger text-center">
+                {{ error }}
+            </div>
+            {% endif %}
 
-    <form method="POST" class="row g-3">
-      <div class="col-12">
-        <label class="form-label">اسم المستخدم</label>
-        <input type="text" name="username" class="form-control" required>
-      </div>
-
-      <div class="col-12">
-        <label class="form-label">كلمة المرور</label>
-        <input type="password" name="password" class="form-control" required>
-      </div>
-
-      <div class="col-12">
-        <button class="btn btn-primary w-100">دخول</button>
-      </div>
-    </form>
-  </div>
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">اسم المستخدم</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="ادخل اسم المستخدم" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">كلمة المرور</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">تسجيل الدخول</button>
+            </form>
+        </div>
+        <div class="card-footer text-center small">
+            <span class="text-muted">الافتراضي: admin / 1234</span>
+        </div>
+    </div>
 </div>
 {% endblock %}
