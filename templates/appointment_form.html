@@ -1,57 +1,64 @@
 {% extends "base.html" %}
-{% block title %}حجز موعد{% endblock %}
 {% block content %}
-<div class="card shadow-sm" style="max-width:700px;margin:auto">
-  <div class="card-body">
-    <h3 class="mb-4">📅 حجز موعد جديد</h3>
+<div class="card shadow p-4">
+    <h2 class="mb-4 text-center">حجز موعد</h2>
+    <form method="POST" action="{{ url_for('book') }}">
+        <div class="mb-3">
+            <label class="form-label">الاسم الكامل</label>
+            <input type="text" name="name" class="form-control" placeholder="اكتب اسمك الكامل" required>
+        </div>
 
-    <form method="POST" class="row g-3">
-      <div class="col-md-6">
-        <label class="form-label">الاسم الكامل</label>
-        <input type="text" name="name" class="form-control" required>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">رقم الجوال</label>
-        <input type="text" name="phone" class="form-control" required>
-      </div>
+        <div class="mb-3">
+            <label class="form-label">رقم الجوال</label>
+            <input type="tel" name="phone" class="form-control" placeholder="مثال: 9665xxxxxxxx" required>
+        </div>
 
-      <div class="col-md-6">
-        <label class="form-label">التخصص</label>
-        <select name="clinic" class="form-select" required>
-          <option value="">-- اختر التخصص --</option>
-          <option value="أسنان">أسنان</option>
-          <option value="باطنية">باطنية</option>
-          <option value="مسالك بولية">مسالك بولية</option>
-          <option value="عظام">عظام</option>
-          <option value="جلدية">جلدية</option>
-          <option value="أنف وأذن وحنجرة">أنف وأذن وحنجرة</option>
-        </select>
-      </div>
+        <div class="mb-3">
+            <label class="form-label">العيادة</label>
+            <select name="clinic" class="form-select" required>
+                <option value="">اختر العيادة</option>
+                <option value="الأسنان">الأسنان</option>
+                <option value="الباطنية">الباطنية</option>
+                <option value="المسالك البولية">المسالك البولية</option>
+                <option value="العظام">العظام</option>
+                <option value="الأطفال">الأطفال</option>
+                <option value="النساء والولادة">النساء والولادة</option>
+            </select>
+        </div>
 
-      <div class="col-md-6">
-        <label class="form-label">الطبيب</label>
-        <input type="text" name="doctor" class="form-control" required>
-        <div class="form-text">اكتب اسم الطبيب</div>
-      </div>
+        <div class="mb-3">
+            <label class="form-label">الطبيب</label>
+            <select name="doctor" class="form-select" required>
+                <option value="">اختر الطبيب</option>
+                <option value="د. أحمد">د. أحمد</option>
+                <option value="د. سارة">د. سارة</option>
+                <option value="د. محمد">د. محمد</option>
+                <option value="د. ليلى">د. ليلى</option>
+                <option value="د. خالد">د. خالد</option>
+            </select>
+        </div>
 
-      <div class="col-md-6">
-        <label class="form-label">التاريخ</label>
-        <input type="date" name="date" class="form-control" required>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">الوقت</label>
-        <input type="time" name="time" class="form-control" required>
-      </div>
+        <div class="mb-3">
+            <label class="form-label">التاريخ</label>
+            <input type="date" name="date" class="form-control" required>
+        </div>
 
-      <div class="col-md-6">
-        <label class="form-label">المدة (بالدقائق)</label>
-        <input type="number" name="duration" class="form-control" value="30" min="10">
-      </div>
+        <div class="mb-3">
+            <label class="form-label">من الساعة</label>
+            <input type="time" name="start_time" class="form-control" required>
+        </div>
 
-      <div class="col-12">
-        <button class="btn btn-success w-100">تأكيد الحجز</button>
-      </div>
+        <div class="mb-3">
+            <label class="form-label">إلى الساعة</label>
+            <input type="time" name="end_time" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">المدة (دقائق)</label>
+            <input type="number" name="duration" class="form-control" value="30" min="10" step="5" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">حجز</button>
     </form>
-  </div>
 </div>
 {% endblock %}
