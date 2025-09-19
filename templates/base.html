@@ -7,17 +7,18 @@
 </head>
 <body>
     <header>
+        <h2>مجموعة د. فارس الحداج الطبية</h2>
         <nav>
-            <ul>
-                <li><a href="{{ url_for('home') }}">الرئيسية</a></li>
-                <li><a href="{{ url_for('book') }}">المواعيد</a></li>
-                <li><a href="{{ url_for('login') }}">تسجيل الدخول</a></li>
-                <li><a href="{{ url_for('admin_dashboard') }}">لوحة الإدارة</a></li>
-            </ul>
+            <a href="{{ url_for('index') }}">الرئيسية</a>
+            <a href="{{ url_for('appointments') }}">المواعيد</a>
+            <a href="{{ url_for('login') }}">تسجيل الدخول</a>
+            <a href="{{ url_for('admin_dashboard') }}">لوحة الإدارة</a>
         </nav>
     </header>
+
     <main>
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
 </body>
 </html>
