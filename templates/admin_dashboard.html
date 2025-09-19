@@ -1,16 +1,19 @@
 {% extends "base.html" %}
+{% block title %}لوحة الإدارة{% endblock %}
 {% block content %}
 <div class="card shadow-sm">
   <div class="card-body">
     <h3 class="mb-4">📋 لوحة الإدارة</h3>
+
     {% if appointments %}
       <div class="table-responsive">
         <table class="table table-bordered table-striped text-center align-middle">
           <thead class="table-primary">
             <tr>
               <th>#</th>
-              <th>الاسم</th>
+              <th>المريض</th>
               <th>الجوال</th>
+              <th>التخصص</th>
               <th>الطبيب</th>
               <th>التاريخ</th>
               <th>الوقت</th>
@@ -24,12 +27,15 @@
               <td>{{ a.id }}</td>
               <td>{{ a.fullname }}</td>
               <td>{{ a.phone }}</td>
+              <td>{{ a.clinic }}</td>
               <td>{{ a.doctor }}</td>
               <td>{{ a.date }}</td>
               <td>{{ a.time }}</td>
               <td>{{ a.duration }} د</td>
               <td>
-                <a href="#" class="btn btn-sm btn-danger">❌ حذف</a>
+                <form method="post" action="{{ url_for('delete_appointment', appt_id=a.id) }}" onsubmit="return confirm('حذف الموعد؟');">
+                  <button class="btn btn-sm btn-danger">❌ حذف</button>
+                </form>
               </td>
             </tr>
             {% endfor %}
@@ -39,6 +45,7 @@
     {% else %}
       <p class="text-muted">لا توجد مواعيد بعد.</p>
     {% endif %}
+
     <a href="{{ url_for('book') }}" class="btn btn-success mt-3">+ إضافة موعد جديد</a>
   </div>
 </div>
