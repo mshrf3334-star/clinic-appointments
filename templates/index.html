@@ -1,9 +1,54 @@
 {% extends "base.html" %}
-{% block title %}الرئيسية{% endblock %}
+{% block title %}الصفحة الرئيسية{% endblock %}
 {% block content %}
-<div class="text-center">
-  <h2 class="mb-4">👋 أهلاً بك في نظام المواعيد</h2>
-  <p class="lead">احجز موعدك بسهولة مع الطبيب المناسب</p>
-  <a href="{{ url_for('book') }}" class="btn btn-success btn-lg mt-3">📅 حجز موعد جديد</a>
+<div class="text-center py-5" style="background:linear-gradient(to right,#00b4db,#0083b0); color:white;">
+  <h1 class="fw-bold mb-3">🏥 نظام المواعيد الطبي</h1>
+  <p class="lead mb-4">سهولة في الحجز، تنظيم في المواعيد، وراحة للمرضى والأطباء</p>
+  <a href="{{ url_for('book') }}" class="btn btn-light btn-lg">📅 احجز موعدك الآن</a>
 </div>
+
+<div class="container py-5">
+  <div class="row text-center">
+    <div class="col-md-3 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3>🦷</h3>
+          <h5 class="card-title">قسم الأسنان</h5>
+          <p class="card-text text-muted">علاج وتسوس الأسنان وتقويمها</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3>🫀</h3>
+          <h5 class="card-title">الباطنية</h5>
+          <p class="card-text text-muted">متابعة أمراض الباطنة والجهاز الهضمي</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3>🦵</h3>
+          <h5 class="card-title">العظام</h5>
+          <p class="card-text text-muted">إصابات وكسور العظام والعلاج الطبيعي</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h3>💧</h3>
+          <h5 class="card-title">المسالك البولية</h5>
+          <p class="card-text text-muted">علاج أمراض المسالك والكلى</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-dark text-light text-center py-3">
+  <p class="mb-0">© 2025 جميع الحقوق محفوظة | بإشراف عربي سايكو</p>
+</footer>
 {% endblock %}
