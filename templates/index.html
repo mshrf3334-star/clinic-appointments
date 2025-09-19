@@ -1,10 +1,9 @@
 {% extends "base.html" %}
+{% block title %}الرئيسية{% endblock %}
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-body text-center">
-    <h2 class="mb-3">مرحباً بك في نظام مواعيد العيادة</h2>
-    <p class="text-muted">من هنا يمكنك حجز المواعيد وإدارتها بسهولة.</p>
-    <a href="{{ url_for('book') }}" class="btn btn-success">+ احجز موعد الآن</a>
-  </div>
+<div class="text-center">
+  <h2 class="mb-4">👋 أهلاً بك في نظام المواعيد</h2>
+  <p class="lead">احجز موعدك بسهولة مع الطبيب المناسب</p>
+  <a href="{{ url_for('book') }}" class="btn btn-success btn-lg mt-3">📅 حجز موعد جديد</a>
 </div>
 {% endblock %}
