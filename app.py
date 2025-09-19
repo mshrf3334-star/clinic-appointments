@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "your_secret_key")
 
-# ---------- إعداد قاعدة البيانات (SQLite) ----------
 DB_PATH = os.getenv("DB_PATH", "clinic.db")
 
 def db_connect():
@@ -28,16 +27,13 @@ def db_init():
         """)
         con.commit()
 
-# نضمن إنشاء الجدول عند تشغيل التطبيق
 db_init()
 
-# ---------- المسارات ----------
-# الرئيسية → نوجّه للحجز مباشرة (علشان أي url_for('home') يشتغل)
 @app.route("/")
 def home():
+    # خلي الرئيسية تفتح الحجز مباشرة
     return redirect(url_for("book"))
 
-# الحجز
 @app.route("/book", methods=["GET", "POST"])
 def book():
     if request.method == "POST":
@@ -50,7 +46,7 @@ def book():
         duration= request.form.get("duration", "30").strip()
 
         if not (name and phone and clinic and doctor and date and time):
-            flash("رجاءً أكمل كل الحقول المطلوبة", "danger")
+            flash("رجاءً أكمل كل الحقول", "danger")
             return redirect(url_for("book"))
 
         try:
@@ -70,22 +66,20 @@ def book():
 
     return render_template("appointment_form.html")
 
-# تسجيل الدخول
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "").strip()
         if username == "admin" and password == "1234":
-            session["user"] = username
             session["logged_in"] = True
-            flash("تم تسجيل الدخول بنجاح ✅", "success")
+            session["user"] = username
+            flash("تم تسجيل الدخول ✅", "success")
             return redirect(url_for("admin_dashboard"))
         flash("❌ اسم المستخدم أو كلمة المرور غير صحيحة", "danger")
         return redirect(url_for("login"))
     return render_template("login.html")
 
-# لوحة الإدارة
 @app.route("/admin")
 def admin_dashboard():
     if not session.get("logged_in"):
@@ -98,17 +92,15 @@ def admin_dashboard():
             FROM appointments
             ORDER BY date DESC, time DESC, id DESC
         """).fetchall()
-        appointments = [dict(r) for r in rows]
 
+    appointments = [dict(r) for r in rows]
     return render_template("admin_dashboard.html", appointments=appointments)
 
-# تسجيل الخروج
 @app.route("/logout")
 def logout():
     session.clear()
-    flash("تم تسجيل الخروج بنجاح", "info")
+    flash("تم تسجيل الخروج", "info")
     return redirect(url_for("login"))
 
 if __name__ == "__main__":
-    # المنفذ 10000 مناسب لـ Render. لو محليًا، ما يضر.
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
