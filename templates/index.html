@@ -1,32 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-
-app = Flask(__name__)
-app.secret_key = "your_secret_key"
-
-@app.route('/')
-def index():
-    return render_template("index.html")
-
-@app.route('/appointments')
-def appointments():
-    return render_template("appointments.html")
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username == "admin" and password == "1234":
-            session['user'] = username
-            return redirect(url_for('admin_dashboard'))
-        else:
-            flash("اسم المستخدم أو كلمة المرور غير صحيحة")
-    return render_template("login.html")
-
-@app.route('/admin')
-def admin_dashboard():
-    if 'user' in session:
-        return render_template("admin.html")
-    else:
-        flash("يلزم تسجيل الدخول أولاً")
-        return redirect(url_for('login'))
+{% extends "base.html" %}
+{% block title %}الرئيسية{% endblock %}
+{% block content %}
+  <section class="card">
+    <h1>نظام مواعيد العيادة</h1>
+    <p>مرحبًا بك في نظام الحجز. استخدم قائمة <strong>المواعيد</strong> لحجز موعد جديد.</p>
+    <ul class="quick-links">
+      <li><a class="btn" href="{{ url_for('appointments') }}">حجز موعد</a></li>
+      <li><a class="btn outline" href="{{ url_for('login') }}">دخول الإدارة</a></li>
+    </ul>
+  </section>
+{% endblock %}
