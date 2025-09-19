@@ -1,97 +1,57 @@
 {% extends "base.html" %}
+{% block title %}حجز موعد{% endblock %}
 {% block content %}
-<div class="card shadow-sm">
+<div class="card shadow-sm" style="max-width:700px;margin:auto">
   <div class="card-body">
-    <h3 class="mb-4">🗓️ حجز موعد</h3>
-    <form method="POST" class="row g-3">
+    <h3 class="mb-4">📅 حجز موعد جديد</h3>
 
+    <form method="POST" class="row g-3">
       <div class="col-md-6">
         <label class="form-label">الاسم الكامل</label>
         <input type="text" name="name" class="form-control" required>
       </div>
-
       <div class="col-md-6">
         <label class="form-label">رقم الجوال</label>
-        <input type="text" name="phone" class="form-control" placeholder="05xxxxxxxx" required>
+        <input type="text" name="phone" class="form-control" required>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">التخصص</label>
-        <select id="clinic" name="clinic" class="form-select" required>
+        <select name="clinic" class="form-select" required>
           <option value="">-- اختر التخصص --</option>
+          <option value="أسنان">أسنان</option>
+          <option value="باطنية">باطنية</option>
+          <option value="مسالك بولية">مسالك بولية</option>
+          <option value="عظام">عظام</option>
+          <option value="جلدية">جلدية</option>
+          <option value="أنف وأذن وحنجرة">أنف وأذن وحنجرة</option>
         </select>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">الطبيب</label>
-        <select id="doctor" name="doctor" class="form-select" required>
-          <option value="">-- اختر الطبيب --</option>
-        </select>
+        <input type="text" name="doctor" class="form-control" required>
+        <div class="form-text">اكتب اسم الطبيب</div>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">التاريخ</label>
         <input type="date" name="date" class="form-control" required>
       </div>
-
       <div class="col-md-6">
         <label class="form-label">الوقت</label>
         <input type="time" name="time" class="form-control" required>
       </div>
 
       <div class="col-md-6">
-        <label class="form-label">المدة (دقائق)</label>
-        <input type="number" name="duration" class="form-control" value="30">
+        <label class="form-label">المدة (بالدقائق)</label>
+        <input type="number" name="duration" class="form-control" value="30" min="10">
       </div>
 
       <div class="col-12">
-        <button type="submit" class="btn btn-primary w-100">حجز</button>
+        <button class="btn btn-success w-100">تأكيد الحجز</button>
       </div>
     </form>
   </div>
 </div>
-
-<script>
-  // قائمة التخصصات والأطباء
-  const data = {
-    "الأسنان": ["د. خالد العتيبي", "د. منى الزهراني", "د. سارة المطيري", "د. فارس القحطاني"],
-    "الباطنية": ["د. محمد القحطاني", "د. رنا الشمري", "د. رائد الحربي", "د. هنادي القحطاني"],
-    "المسالك البولية": ["د. علي الشهراني", "د. ندى العبدالله", "د. سامي الزهراني"],
-    "العظام": ["د. فهد المطيري", "د. ريم الحارثي", "د. نايف العتيبي"],
-    "العيون": ["د. إبراهيم الدوسري", "د. دلال السبيعي"],
-    "الجلدية": ["د. ناصر العوفي", "د. عبير الشمراني", "د. روان التركي"],
-    "الأطفال": ["د. عبدالله اليوسف", "د. مها السويلم", "د. بشرى الزامل"],
-    "النساء والولادة": ["د. إيمان السالم", "د. نوف العتيق", "د. جواهر العبدالكريم"],
-    "الأنف والأذن والحنجرة": ["د. مازن البلوي", "د. يارا الخالدي"],
-    "القلب": ["د. حسين الغامدي", "د. شهد الفارس"],
-    "السكر والغدد": ["د. وليد العبدلي", "د. هديل العيسى"],
-    "الأعصاب": ["د. رائد باوزير", "د. صفاء التركي"],
-    "التغذية العلاجية": ["أ. هيا العبدالمحسن", "أ. نواف الغريبي"]
-  };
-
-  const clinicSelect = document.getElementById('clinic');
-  const doctorSelect = document.getElementById('doctor');
-
-  // تعبئة قائمة التخصصات
-  Object.keys(data).forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    clinicSelect.appendChild(opt);
-  });
-
-  function fillDoctors() {
-    const clinic = clinicSelect.value;
-    doctorSelect.innerHTML = '<option value="">-- اختر الطبيب --</option>';
-    if (!clinic || !data[clinic]) return;
-    data[clinic].forEach(d => {
-      const opt = document.createElement('option');
-      opt.value = d;
-      opt.textContent = d;
-      doctorSelect.appendChild(opt);
-    });
-  }
-
-  clinicSelect.addEventListener('change', fillDoctors);
-</script>
 {% endblock %}
