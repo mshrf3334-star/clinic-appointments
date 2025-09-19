@@ -1,12 +1,8 @@
 {% extends "base.html" %}
-{% block title %}الرئيسية{% endblock %}
 {% block content %}
-  <section class="card">
-    <h1>نظام مواعيد العيادة</h1>
-    <p>مرحبًا بك في نظام الحجز. استخدم قائمة <strong>المواعيد</strong> لحجز موعد جديد.</p>
-    <ul class="quick-links">
-      <li><a class="btn" href="{{ url_for('appointments') }}">حجز موعد</a></li>
-      <li><a class="btn outline" href="{{ url_for('login') }}">دخول الإدارة</a></li>
-    </ul>
-  </section>
+<div class="text-center">
+    <h1 class="mb-4">مرحباً بك في نظام مواعيد العيادة</h1>
+    <p class="lead">يمكنك من هنا حجز موعد بسهولة أو إدارة المواعيد من لوحة التحكم.</p>
+    <a href="{{ url_for('book') }}" class="btn btn-success btn-lg">حجز موعد جديد</a>
+</div>
 {% endblock %}
