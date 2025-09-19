@@ -1,54 +1,32 @@
-{% extends "base.html" %}
-{% block title %}الصفحة الرئيسية{% endblock %}
-{% block content %}
-<div class="text-center py-5" style="background:linear-gradient(to right,#00b4db,#0083b0); color:white;">
-  <h1 class="fw-bold mb-3">🏥 نظام المواعيد الطبي</h1>
-  <p class="lead mb-4">سهولة في الحجز، تنظيم في المواعيد، وراحة للمرضى والأطباء</p>
-  <a href="{{ url_for('book') }}" class="btn btn-light btn-lg">📅 احجز موعدك الآن</a>
-</div>
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 
-<div class="container py-5">
-  <div class="row text-center">
-    <div class="col-md-3 mb-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3>🦷</h3>
-          <h5 class="card-title">قسم الأسنان</h5>
-          <p class="card-text text-muted">علاج وتسوس الأسنان وتقويمها</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 mb-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3>🫀</h3>
-          <h5 class="card-title">الباطنية</h5>
-          <p class="card-text text-muted">متابعة أمراض الباطنة والجهاز الهضمي</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 mb-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3>🦵</h3>
-          <h5 class="card-title">العظام</h5>
-          <p class="card-text text-muted">إصابات وكسور العظام والعلاج الطبيعي</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 mb-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h3>💧</h3>
-          <h5 class="card-title">المسالك البولية</h5>
-          <p class="card-text text-muted">علاج أمراض المسالك والكلى</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+app = Flask(__name__)
+app.secret_key = "your_secret_key"
 
-<footer class="bg-dark text-light text-center py-3">
-  <p class="mb-0">© 2025 جميع الحقوق محفوظة | بإشراف عربي سايكو</p>
-</footer>
-{% endblock %}
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+@app.route('/appointments')
+def appointments():
+    return render_template("appointments.html")
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username == "admin" and password == "1234":
+            session['user'] = username
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash("اسم المستخدم أو كلمة المرور غير صحيحة")
+    return render_template("login.html")
+
+@app.route('/admin')
+def admin_dashboard():
+    if 'user' in session:
+        return render_template("admin.html")
+    else:
+        flash("يلزم تسجيل الدخول أولاً")
+        return redirect(url_for('login'))
