@@ -1,11 +1,22 @@
-{% extends "base.html" %}
-{% block title %}الصفحة الرئيسية{% endblock %}
-{% block content %}
-<div class="page_wrap">
-  <div class="card-form" style="max-width:560px;width:100%">
-    <h2>مرحباً بك في نظام المواعيد</h2>
-    <p>احجز موعدك بسهولة وسرعة.</p>
-    <p><a class="btn" href="{{ url_for('book') }}">الانتقال إلى الحجز</a></p>
-  </div>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام المواعيد</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h2>مرحبا بكم في نظام المواعيد</h2>
+        <nav>
+            <a href="{{ url_for('index') }}">الرئيسية</a> |
+            <a href="{{ url_for('book') }}">حجز موعد</a> |
+            <a href="{{ url_for('login') }}">تسجيل الدخول</a>
+        </nav>
+    </header>
+
+    <main>
+        <p>اختر الخدمة التي تريدها من القائمة أعلاه.</p>
+    </main>
+</body>
+</html>
