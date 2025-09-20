@@ -1,13 +1,11 @@
 {% extends "base.html" %}
+{% block title %}الصفحة الرئيسية{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-center">
-  <div class="card shadow p-4 card-home bg-white">
-    <h3 class="mb-3 text-center">مرحباً بك في نظام العيادة</h3>
-    <p class="text-center text-muted mb-4">اختر ما تريد فعله</p>
-    <div class="d-grid gap-2">
-      <a class="btn btn-primary" href="{{ url_for('book') }}">حجز موعد</a>
-      <a class="btn btn-outline-secondary" href="{{ url_for('login') }}">تسجيل الدخول (لوحة الإدارة)</a>
-    </div>
+<div class="page_wrap">
+  <div class="card-form" style="max-width:560px;width:100%">
+    <h2>مرحباً بك في نظام المواعيد</h2>
+    <p>احجز موعدك بسهولة وسرعة.</p>
+    <p><a class="btn" href="{{ url_for('book') }}">الانتقال إلى الحجز</a></p>
   </div>
 </div>
 {% endblock %}
