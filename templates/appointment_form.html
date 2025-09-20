@@ -1,51 +1,62 @@
 {% extends "base.html" %}
+{% block title %}حجز موعد{% endblock %}
 {% block content %}
-<div class="page-wrap">
-  <div class="card shadow p-4 card-form bg-white">
-    <h3 class="mb-3 text-center">حجز موعد</h3>
-    <form method="POST">
-      <div class="mb-3">
-        <label class="form-label">الاسم الكامل</label>
-        <input type="text" class="form-control" name="name" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">رقم الجوال</label>
-        <input type="text" class="form-control" name="phone" placeholder="+9665xxxxxxxx" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">العيادة</label>
-        <select class="form-select" name="clinic" required>
-          <option value="">اختر العيادة</option>
-          <option>الأسنان</option>
-          <option>الباطنية</option>
-          <option>المسالك البولية</option>
-          <option>العظام</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">الطبيب</label>
-        <select class="form-select" name="doctor" required>
-          <option value="">اختر الطبيب</option>
-          <option>د. محمد</option>
-          <option>د. خالد</option>
-          <option>د. فهد</option>
-          <option>د. علي</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">التاريخ</label>
-        <input type="date" class="form-control" name="date" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">الوقت</label>
-        <input type="time" class="form-control" name="time" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">المدة (دقائق)</label>
-        <input type="number" class="form-control" name="duration" value="30" required>
-      </div>
-      <button type="submit" class="btn btn-success w-100">حجز</button>
+<div class="page_wrap">
+  <div class="card-form" style="max-width:560px;width:100%">
+    <h3>حجز موعد 🗓️</h3>
+
+    <form method="post" action="{{ url_for('book') }}">
+      <label>الاسم الكامل</label>
+      <input type="text" name="patient_name" placeholder="الاسم" required>
+
+      <label>رقم الجوال</label>
+      <input type="tel" name="phone" placeholder="+9665xxxxxxxx" required>
+
+      <label>العيادة</label>
+      <select name="clinic_id" id="clinic" required>
+        <option value="" selected disabled>اختر العيادة</option>
+        {% for c in clinics %}
+          <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label>الطبيب</label>
+      <select name="doctor_id" id="doctor" required>
+        <option value="" selected disabled>اختر الطبيب</option>
+        {% for d in doctors %}
+          <option value="{{ d.id }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label>التاريخ</label>
+      <input type="date" name="date" required>
+
+      <label>الوقت</label>
+      <input type="time" name="time" required>
+
+      <label>المدة (دقائق)</label>
+      <input type="number" name="duration" min="10" max="180" step="5" value="30" required>
+
+      <button type="submit">حجز</button>
     </form>
   </div>
 </div>
+
+<script>
+  // (اختياري) تحديث قائمة الأطباء حسب العيادة المختارة
+  const clinicSel = document.getElementById('clinic');
+  const doctorSel = document.getElementById('doctor');
+  clinicSel?.addEventListener('change', async () => {
+    const id = clinicSel.value;
+    if (!id) return;
+    const res = await fetch(`/api/doctors?clinic_id=${id}`);
+    const list = await res.json();
+    doctorSel.innerHTML = `<option value="" selected disabled>اختر الطبيب</option>`;
+    list.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.id; opt.textContent = d.name;
+      doctorSel.appendChild(opt);
+    });
+  });
+</script>
 {% endblock %}
