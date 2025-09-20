@@ -1,62 +1,69 @@
 {% extends "base.html" %}
 {% block title %}حجز موعد{% endblock %}
 {% block content %}
-<div class="page_wrap">
-  <div class="card-form" style="max-width:560px;width:100%">
-    <h3>حجز موعد 🗓️</h3>
+<div class="container card-form">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="m-0">🗓️ حجز موعد</h5>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{{ url_for('book') }}" novalidate>
+        <div class="mb-3">
+          <label class="form-label">الاسم الكامل</label>
+          <input type="text" name="full_name" class="form-control" placeholder="مثال: محمد أحمد" required>
+        </div>
 
-    <form method="post" action="{{ url_for('book') }}">
-      <label>الاسم الكامل</label>
-      <input type="text" name="patient_name" placeholder="الاسم" required>
+        <div class="mb-3">
+          <label class="form-label">رقم الجوال</label>
+          <input type="tel" name="phone" class="form-control" placeholder="+9665xxxxxxxx" required>
+        </div>
 
-      <label>رقم الجوال</label>
-      <input type="tel" name="phone" placeholder="+9665xxxxxxxx" required>
+        <div class="mb-3">
+          <label class="form-label">العيادة</label>
+          <select name="clinic" class="form-select" required>
+            <option value="" selected disabled>اختر العيادة</option>
+            {% for c in clinics %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-      <label>العيادة</label>
-      <select name="clinic_id" id="clinic" required>
-        <option value="" selected disabled>اختر العيادة</option>
-        {% for c in clinics %}
-          <option value="{{ c.id }}">{{ c.name }}</option>
-        {% endfor %}
-      </select>
+        <div class="mb-3">
+          <label class="form-label">الطبيب</label>
+          <select name="doctor" class="form-select" required>
+            <option value="" selected disabled>اختر الطبيب</option>
+            {% for d in doctors %}
+            <option value="{{ d.id }}">{{ d.name }} — {{ d.specialty }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-      <label>الطبيب</label>
-      <select name="doctor_id" id="doctor" required>
-        <option value="" selected disabled>اختر الطبيب</option>
-        {% for d in doctors %}
-          <option value="{{ d.id }}">{{ d.name }}</option>
-        {% endfor %}
-      </select>
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label">التاريخ</label>
+            <input type="date" name="date" class="form-control" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label">الوقت</label>
+            <input type="time" name="time" class="form-control" required>
+          </div>
+        </div>
 
-      <label>التاريخ</label>
-      <input type="date" name="date" required>
+        <div class="mt-3">
+          <label class="form-label">المدة (دقائق)</label>
+          <input type="number" name="duration" class="form-control" value="30" min="5" step="5" required>
+        </div>
 
-      <label>الوقت</label>
-      <input type="time" name="time" required>
+        <div class="form-check mt-3">
+          <input class="form-check-input" type="checkbox" value="1" id="confirm" required>
+          <label class="form-check-label" for="confirm">أقرّ بأن البيانات صحيحة</label>
+        </div>
 
-      <label>المدة (دقائق)</label>
-      <input type="number" name="duration" min="10" max="180" step="5" value="30" required>
-
-      <button type="submit">حجز</button>
-    </form>
+        <div class="d-grid mt-4">
+          <button class="btn btn-primary btn-lg" type="submit">حـجــز</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
-
-<script>
-  // (اختياري) تحديث قائمة الأطباء حسب العيادة المختارة
-  const clinicSel = document.getElementById('clinic');
-  const doctorSel = document.getElementById('doctor');
-  clinicSel?.addEventListener('change', async () => {
-    const id = clinicSel.value;
-    if (!id) return;
-    const res = await fetch(`/api/doctors?clinic_id=${id}`);
-    const list = await res.json();
-    doctorSel.innerHTML = `<option value="" selected disabled>اختر الطبيب</option>`;
-    list.forEach(d => {
-      const opt = document.createElement('option');
-      opt.value = d.id; opt.textContent = d.name;
-      doctorSel.appendChild(opt);
-    });
-  });
-</script>
 {% endblock %}
