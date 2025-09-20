@@ -1,18 +1,17 @@
 {% extends "base.html" %}
+{% block title %}تسجيل الدخول{% endblock %}
 {% block content %}
-<div class="page-wrap">
-  <div class="card shadow p-4 card-form bg-white">
-    <h3 class="mb-3 text-center">تسجيل الدخول</h3>
-    <form method="POST">
-      <div class="mb-3">
-        <label class="form-label">اسم المستخدم</label>
-        <input type="text" class="form-control" name="username" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">كلمة المرور</label>
-        <input type="password" class="form-control" name="password" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">دخول</button>
+<div class="page_wrap">
+  <div class="card-form" style="max-width:420px;width:100%">
+    <h2>تسجيل الدخول 🔐</h2>
+    <form method="post" action="{{ url_for('login') }}">
+      <label>اسم المستخدم</label>
+      <input type="text" name="username" value="admin" required>
+
+      <label>كلمة المرور</label>
+      <input type="password" name="password" value="1234" required>
+
+      <button type="submit">دخول</button>
     </form>
   </div>
 </div>
