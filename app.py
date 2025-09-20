@@ -1,111 +1,221 @@
-import os, sqlite3
+# app.py
+from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+import uuid
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "change-this-secret"  # غيّرها لقيمة قوية
+app.secret_key = "replace_this_with_a_strong_secret_key"
 
-DB_PATH = os.environ.get("DB_PATH", "clinic.db")
+# ========== بيانات نموذجية (بدون قاعدة بيانات) ==========
+# عيادات
+clinics = [
+    {"id": "c1", "name": "أسنان"},
+    {"id": "c2", "name": "باطنية"},
+    {"id": "c3", "name": "مسالك بولية"},
+    {"id": "c4", "name": "عظام"},
+]
 
-# --- أدوات قاعدة البيانات ---
-def db_conn():
-    con = sqlite3.connect(DB_PATH)
-    con.row_factory = sqlite3.Row
-    return con
+# أطباء (كل طبيب تابع لعيادة برقم id)
+doctors = [
+    {"id": "d1", "name": "د. أحمد", "clinic_id": "c1", "specialty": "طبيب أسنان"},
+    {"id": "d2", "name": "د. سارة", "clinic_id": "c2", "specialty": "أمراض داخلية"},
+    {"id": "d3", "name": "د. خالد", "clinic_id": "c3", "specialty": "مسالك بولية"},
+    {"id": "d4", "name": "د. ليلى", "clinic_id": "c4", "specialty": "جراحة عظام"},
+]
 
-def db_init():
-    with db_conn() as con:
-        con.execute("""
-            CREATE TABLE IF NOT EXISTS appointments (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                fullname TEXT NOT NULL,
-                phone TEXT NOT NULL,
-                clinic TEXT NOT NULL,
-                doctor TEXT NOT NULL,
-                date TEXT NOT NULL,
-                created_at TEXT NOT NULL
-            )
-        """)
-        con.commit()
+# مواعيد (قائمة كلمات)
+appointments = [
+    # مثال هيكل:
+    # {
+    #   "id": "uuid",
+    #   "full_name": "علي",
+    #   "phone": "+9665xxxx",
+    #   "clinic_id": "c1",
+    #   "doctor_id": "d1",
+    #   "date": "2025-09-25",
+    #   "time": "10:30",
+    #   "duration": 30,
+    #   "created_at": datetime(...)
+    # }
+]
 
-db_init()
+# بيانات حساب الادمن الافتراضي
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "1234"
 
-# --- الصفحة الرئيسية ---
+
+# ========== دوال مساعدة ==========
+def get_clinic(cid):
+    for c in clinics:
+        if c["id"] == cid:
+            return c
+    return None
+
+def get_doctor(did):
+    for d in doctors:
+        if d["id"] == did:
+            return d
+    return None
+
+# تحقق من تضارب المواعيد (بسيط: نفس الطبيب والتاريخ والوقت) 
+def is_slot_taken(doctor_id, date, time):
+    for a in appointments:
+        if a["doctor_id"] == doctor_id and a["date"] == date and a["time"] == time:
+            return True
+    return False
+
+
+# ========== واجهات الموقع ==========
 @app.route("/")
-def index():
+def home():
+    # صفحة الاستقبال
     return render_template("index.html")
 
-# --- صفحة الحجز ---
+
 @app.route("/book", methods=["GET", "POST"])
 def book():
-    if request.method == "POST":
-        fullname = request.form.get("fullname", "").strip()
-        phone    = request.form.get("phone", "").strip()
-        clinic   = request.form.get("clinic", "").strip()
-        doctor   = request.form.get("doctor", "").strip()
-        date     = request.form.get("date", "").strip()
-
-        if not (fullname and phone and clinic and doctor and date):
-            flash("يرجى تعبئة جميع الحقول", "danger")
-            return render_template("appointment_form.html")
-
-        with db_conn() as con:
-            con.execute(
-                "INSERT INTO appointments (fullname, phone, clinic, doctor, date, created_at) VALUES (?,?,?,?,?,?)",
-                (fullname, phone, clinic, doctor, date, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            )
-            con.commit()
-
-        flash("تم حجز الموعد بنجاح ✅", "success")
+    if request.method == "GET":
+        # عرض نموذج الحجز
+        return render_template("appointment_form.html", clinics=clinics, doctors=doctors)
+    
+    # POST: استلام الحقول وحجز
+    data = request.form
+    full_name = (data.get("full_name") or "").strip()
+    phone = (data.get("phone") or "").strip()
+    clinic_id = data.get("clinic") or ""
+    doctor_id = data.get("doctor") or ""
+    date = data.get("date") or ""
+    time = data.get("time") or ""
+    duration_raw = data.get("duration") or ""
+    
+    # تحقق الحقول المطلوبة
+    missing = []
+    if not full_name:
+        missing.append("الاسم الكامل")
+    if not phone:
+        missing.append("رقم الجوال")
+    if not clinic_id:
+        missing.append("الالعيادة")
+    if not doctor_id:
+        missing.append("الطبيب")
+    if not date:
+        missing.append("التاريخ")
+    if not time:
+        missing.append("الوقت")
+    if not duration_raw:
+        missing.append("المدة")
+    
+    if missing:
+        flash("يرجى تعبئة الحقول: " + ", ".join(missing))
         return redirect(url_for("book"))
+    
+    # تأكيد صحة البيانات البسيطة
+    try:
+        duration = int(duration_raw)
+        # تأكد أن العيادة والطبيب موجودين
+        if not get_clinic(clinic_id):
+            flash("العيادة المختارة غير صالحة")
+            return redirect(url_for("book"))
+        doc = get_doctor(doctor_id)
+        if not doc:
+            flash("الطبيب المختار غير صالح")
+            return redirect(url_for("book"))
+        # تحقق ان الطبيب ينتمي للعيادة
+        if doc["clinic_id"] != clinic_id:
+            flash("الالعيادة والطيب غير متوافقين")
+            return redirect(url_for("book"))
+    except ValueError:
+        flash("قيمة المدة يجب أن تكون رقمية")
+        return redirect(url_for("book"))
+    
+    # تحقق حجز متضارب
+    if is_slot_taken(doctor_id, date, time):
+        flash("هذا الموعد غير متاح للطبيب المختار")
+        return redirect(url_for("book"))
+    
+    # انشاء الحجز
+    appt = {
+        "id": str(uuid.uuid4()),
+        "full_name": full_name,
+        "phone": phone,
+        "clinic_id": clinic_id,
+        "doctor_id": doctor_id,
+        "date": date,
+        "time": time,
+        "duration": duration,
+        "created_at": datetime.utcnow()
+    }
+    appointments.append(appt)
+    flash("تم حجز الموعد بنجاح ✅")
+    return redirect(url_for("home"))
 
-    return render_template("appointment_form.html")
 
-# --- تسجيل الدخول ---
+# ========== تسجيل دخول وادارة ==========
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "").strip()
-
-        if not username or not password:
-            flash("يرجى تعبئة جميع الحقول", "danger")
-            return render_template("login.html")
-
-        if username == "admin" and password == "1234":
-            session["user"] = "admin"
-            flash("تم تسجيل الدخول بنجاح ✅", "success")
-            return redirect(url_for("admin_dashboard"))
-        else:
-            flash("بيانات الدخول غير صحيحة ❌", "danger")
-            return render_template("login.html")
-
-    return render_template("login.html")
-
-# --- تسجيل الخروج ---
-@app.route("/logout")
-def logout():
-    session.clear()
-    flash("تم تسجيل الخروج", "info")
+    if request.method == "GET":
+        return render_template("login.html")
+    username = (request.form.get("username") or "").strip()
+    password = (request.form.get("password") or "").strip()
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        session["admin"] = True
+        flash("تم تسجيل الدخول كمسؤول")
+        return redirect(url_for("admin_dashboard"))
+    flash("بيانات دخول خاطئة")
     return redirect(url_for("login"))
 
-# --- لوحة الإدارة: تعرض المواعيد من قاعدة البيانات ---
+
+@app.route("/logout")
+def logout():
+    session.pop("admin", None)
+    flash("تم تسجيل الخروج")
+    return redirect(url_for("home"))
+
+
 @app.route("/admin")
 def admin_dashboard():
-    if session.get("user") != "admin":
-        flash("يلزم تسجيل الدخول أولاً", "warning")
+    if not session.get("admin"):
+        flash("عليك تسجيل الدخول كمسؤول")
         return redirect(url_for("login"))
+    # رتب المواعيد بحسب تاريخ الإنشاء
+    sorted_appts = sorted(appointments, key=lambda x: x["created_at"], reverse=True)
+    # أعرض لوحة الإدارة
+    # إرسِل بيانات مكملة: اسم العيادة واسم الطبيب
+    for a in sorted_appts:
+        a["clinic_name"] = get_clinic(a["clinic_id"])["name"] if get_clinic(a["clinic_id"]) else ""
+        doc = get_doctor(a["doctor_id"])
+        a["doctor_name"] = doc["name"] if doc else ""
+        a["doctor_specialty"] = doc["specialty"] if doc else ""
+        a["created_str"] = a["created_at"].strftime("%Y-%m-%d %H:%M:%S")
+    return render_template("admin_dashboard.html", appointments=sorted_appts)
 
-    with db_conn() as con:
-        rows = con.execute("""
-            SELECT id, fullname, phone, clinic, doctor, date, created_at
-            FROM appointments
-            ORDER BY date DESC, created_at DESC, id DESC
-        """).fetchall()
-        appointments = [dict(r) for r in rows]
 
-    return render_template("admin_dashboard.html", appointments=appointments)
+# صغير: حذف موعد (بواسطة الادمن)
+@app.route("/admin/delete/<appt_id>", methods=["POST"])
+def admin_delete(appt_id):
+    if not session.get("admin"):
+        abort(403)
+    global appointments
+    appointments = [a for a in appointments if a["id"] != appt_id]
+    flash("تم حذف الموعد")
+    return redirect(url_for("admin_dashboard"))
+
+
+# صفحة تعاريف بسيطة (اختياري)
+@app.context_processor
+def inject_common():
+    return dict(clinics=clinics, doctors=doctors)
+
+
+# معالجات أخطاء بسيطة
+@app.errorhandler(500)
+def server_error(e):
+    # لو صار خطأ داخلي نعيد رسالة وداتا للسجل
+    app.logger.error("Internal Server Error: %s", e)
+    return render_template("500.html", error=e), 500
+
 
 if __name__ == "__main__":
-    # Render سيستخدم gunicorn، هذا فقط للتشغيل المحلي
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    # اطبع لو كنت تشغّل محليًا
+    print("Starting Flask development server (debug=False)")
+    app.run(host="0.0.0.0", port=5000, debug=False)
