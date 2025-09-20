@@ -1,22 +1,16 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>نظام المواعيد</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h2>مرحبا بكم في نظام المواعيد</h2>
-        <nav>
-            <a href="{{ url_for('index') }}">الرئيسية</a> |
-            <a href="{{ url_for('book') }}">حجز موعد</a> |
-            <a href="{{ url_for('login') }}">تسجيل الدخول</a>
-        </nav>
-    </header>
-
-    <main>
-        <p>اختر الخدمة التي تريدها من القائمة أعلاه.</p>
-    </main>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}الصفحة الرئيسية{% endblock %}
+{% block content %}
+<div class="container text-center my-5">
+  <div class="p-5 bg-light shadow rounded-4">
+    <h1 class="fw-bold mb-3">👨‍⚕️ نظام المواعيد الطبية</h1>
+    <p class="lead mb-4">
+      أهلاً بك في نظام الحجز الإلكتروني للعيادات  
+      اختر عيادتك واحجز موعدك بكل سهولة وسرعة
+    </p>
+    <a href="{{ url_for('book') }}" class="btn btn-primary btn-lg px-5">
+      احجز موعد الآن
+    </a>
+  </div>
+</div>
+{% endblock %}
