@@ -1,23 +1,81 @@
-*{box-sizing:border-box;font-family:"Tajawal",system-ui,-apple-system,Segoe UI,Roboto,Arial}
-body{margin:0;background:#f6f7fb;color:#222}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 16px;background:#0ea5e9;color:#fff}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:36px;height:36px;border-radius:50%;object-fit:cover}
-.brand-name{font-weight:700}
-.menu a{color:#fff;text-decoration:none;margin-inline:8px;padding:8px 10px;border-radius:10px}
-.menu a:hover{background:rgba(255,255,255,.15)}
-.container{max-width:920px;margin:24px auto;padding:0 16px}
-.card{background:#fff;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);padding:20px}
-h1,h2{margin:0 0 16px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.form-grid label{display:flex;flex-direction:column;gap:6px;font-size:14px}
-.form-grid input,.form-grid select{padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fafafa}
-.time-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #0ea5e9;color:#0ea5e9;text-decoration:none}
-.btn.primary{background:#0ea5e9;color:#fff}
-.btn.outline{background:#fff}
-.btn:hover{filter:brightness(0.95)}
-.quick-links{list-style:none;padding:0;margin:10px 0;display:flex;gap:10px}
-.flash .alert{background:#e6fff4;border:1px solid #22c55e;padding:10px;border-radius:10px;margin-bottom:8px}
-.footer{margin:30px auto 20px;text-align:center;color:#6b7280}
-@media (max-width:720px){.form-grid{grid-template-columns:1fr}.time-row{grid-template-columns:1fr}}
+/* ضبط الخط والاتجاه */
+body {
+    font-family: "Tahoma", "Arial", sans-serif;
+    direction: rtl;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 0;
+}
+
+/* رأس الصفحة */
+header {
+    background: #0077b6;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+header nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* النموذج */
+form {
+    max-width: 400px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input, form select, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background: #0077b6;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+form button:hover {
+    background: #005f8a;
+}
+
+/* الرسائل */
+.flash-messages {
+    list-style: none;
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 400px;
+    background: #ffe0e0;
+    border: 1px solid #ff7b7b;
+    border-radius: 5px;
+    color: #a30000;
+    text-align: center;
+}
+
+/* المحتوى الرئيسي */
+main {
+    padding: 20px;
+    text-align: center;
+}
